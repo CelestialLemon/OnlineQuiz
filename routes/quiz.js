@@ -45,7 +45,6 @@ router.get('/attempt/:id', authenticateToken, async (req, res) =>
 {
     console.log('Get /' + req.params.id + ' quiz attempt request at ' + new Date());
     const quizData = await QuizModel.findById(req.params.id);
-    console.log(quizData);
     res.send(quizData);
 })
 
@@ -60,7 +59,6 @@ router.post('/submit/:id', authenticateToken, async (req, res) =>
             "answers" : req.body.answers,
             "timeSubmitted" : new Date()
         })
-        console.log(quizData.responses);
         const updatedQuizData = await QuizModel.findByIdAndUpdate(req.params.id, quizData);
     }catch(err)
     {
@@ -68,6 +66,33 @@ router.post('/submit/:id', authenticateToken, async (req, res) =>
         return;
     }
     res.send({"msg" : "Submitted Successfully"});
+})
+
+router.get('/alreadyattempted/:id', authenticateToken, async (req, res) =>
+{
+    console.log("Request for checking if already attempted quiz at " + new Date());
+    const quizData = await QuizModel.findById(req.params.id);
+    let alreadyAttempted = false;
+    quizData.responses.forEach((response, index) =>
+    {
+        if(response.respondent == req.user.username)
+        {
+            alreadyAttempted = true;
+        }
+    })
+
+    if(alreadyAttempted == true)
+    res.send({"msg" : "Already Attempted"})
+    if(alreadyAttempted == false)
+    res.send({"msg" : "Not Attempted"})
+})
+
+router.delete('/:id', authenticateToken, async (req, res) =>
+{
+    console.log('delete req for quiz ' + req.params.id + ' at ' + new Date());
+    const deletedQuiz = await QuizModel.findByIdAndDelete(req.params.id);
+    console.log(deletedQuiz);
+    res.send({"msg" : "Deleted Successfully"});
 })
 
 

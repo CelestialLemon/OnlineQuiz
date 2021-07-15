@@ -1,0 +1,4 @@
+add delete functionality for delete quiz button --done
+feedback on create quiz button redirect to new page
+on submit direct to submitted successfully page --done
+my responses tab
