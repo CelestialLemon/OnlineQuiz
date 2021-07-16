@@ -50,7 +50,7 @@ router.post('/signup', async (req, res) =>
         const newUser = UserModel({
             "username" : req.body.username,
             "password" : hashedPassword,
-            
+            "myResponses" : []
         });
 
         try

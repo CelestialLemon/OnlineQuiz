@@ -5,6 +5,7 @@ const cors = require('cors')
 
 const AuthRouter = require('./routes/authentication')
 const QuizRouter = require('./routes/quiz')
+const ResponseRouter = require('./routes/response')
 
 const server = express();
 
@@ -14,6 +15,7 @@ server.use(bodyParser.json());
 
 server.use('/auth', AuthRouter);
 server.use('/quiz', QuizRouter);
+server.use('/response', ResponseRouter);
 
 server.get('/', (req, res) =>
 {

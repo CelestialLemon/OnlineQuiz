@@ -3,9 +3,9 @@ const { mongo } = require('mongoose');
 const router = express.Router();
 
 const QuizModel = require('../models/quiz.model')
+const UserModel = require('../models/user.model')
 
 const authenticateToken = require('../functions/authenticateToken');
-const quizModel = require('../models/quiz.model');
 
 router.post('/add', authenticateToken, async (req, res) =>
 {
@@ -60,6 +60,17 @@ router.post('/submit/:id', authenticateToken, async (req, res) =>
             "timeSubmitted" : new Date()
         })
         const updatedQuizData = await QuizModel.findByIdAndUpdate(req.params.id, quizData);
+
+        const userData = await UserModel.findOne({username : req.user.username});
+        console.log(userData);
+        userData.myResponses.push(
+            {
+                'creator' : req.body.creator,
+                'quizName' : req.body.quizName,
+                'timeSubmitted' : new Date() 
+            });
+
+        const updatedUser = await UserModel.findByIdAndUpdate(userData._id, userData);
     }catch(err)
     {
         res.send({"msg" : err});
